@@ -1,22 +1,22 @@
 #!/usr/bin/python3
-"""defining a rectangle"""
+"""Area & Perimeter"""
+
 
 class Rectangle:
-    """class created thus defining the instant variables """
-    
+    """Defining/initializing the  rectangle"""
+
     def __init__(self, width=0, height=0):
         self.width = width
         self.height = height
 
     @property
     def width(self):
-    """Get the width of the rectangle
-    """
+        """getter, for the width"""
         return self.__width
 
     @width.setter
     def width(self, value):
-        """Setter, for setting"""
+        """Setter, for width mutation"""
         if not isinstance(value, int):
             raise TypeError("width must be an integer")
         if value < 0:
@@ -25,8 +25,9 @@ class Rectangle:
 
     @property
     def height(self):
-        """get
+        """Getter, for
         the rectangle height
+
         """
         return self.__height
 
@@ -37,3 +38,21 @@ class Rectangle:
         if value < 0:
             raise ValueError("height must be >= 0")
         self.__height = value
+
+    def area(self):
+        """instance method that returns
+        the rectangle area
+
+        """
+        rectangle_area = self.__height * self.__width
+        return rectangle_area
+
+    def perimeter(self):
+        """instance method that returns the
+        rectangle perimeter
+
+        """
+        if self.__width == 0 or self.__height == 0:
+            return (0)
+        rectangle_params = ((2 * self.__height) + (2 * self.__width))
+        return rectangle_params
