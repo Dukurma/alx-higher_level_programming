@@ -1,6 +1,7 @@
 #!/usr/bin/python3
 """defining a rectangle"""
 
+
 class Rectangle:
     """class created thus defining the instant variables """
     
