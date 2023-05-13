@@ -71,10 +71,12 @@ class Base:
 
     @classmethod
     def create(cls, **dictionary):
-        """give back an output of a class instantied from a dictionary of attributes.
+        """give back an output of a class instantied from
+        a dictionary of attributes.
 
         Argments:
-            **dictionary (dict): Key/value pairs of attributes to initialize.
+            **dictionary (dict): Key/value pairs of
+            attributes to initialize.
         """
         if dictionary and dictionary != {}:
             if cls.__name__ == "Rectangle":
@@ -86,7 +88,8 @@ class Base:
 
     @classmethod
     def load_from_file(cls):
-        """give back an output of a list of classes instantiated from a file of JSON strings.
+        """give back an output of a list of classes
+        instantiated from a file of JSON strings.
 
         Reads from `<cls.__name__>.json`.
 
@@ -104,7 +107,8 @@ class Base:
 
     @classmethod
     def save_to_file_csv(cls, list_objs):
-        """Write the CSV serialization of a list of objects to a file.
+        """Write the CSV serialization of a list of
+        objects to a file.
 
         Argments:
             list_objs (list): A list of inherited Base instances.
@@ -124,7 +128,8 @@ class Base:
 
     @classmethod
     def load_from_file_csv(cls):
-        """give back an output of a list of classes instantiated from a CSV file.
+        """give back an output of a list of classes
+        instantiated from a CSV file.
 
         Reads from `<cls.__name__>.csv`.
 

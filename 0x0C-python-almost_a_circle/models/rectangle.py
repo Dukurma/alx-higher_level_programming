@@ -142,7 +142,10 @@ class Rectangle(Base):
                     self.y = v
 
     def to_dictionary(self):
-        """give back an output of the dictionary representation of a Rectangle."""
+        """
+        give back an output of the dictionary
+        representation of a Rectangle.
+        """
         return {
             "id": self.id,
             "width": self.width,
@@ -152,7 +155,10 @@ class Rectangle(Base):
         }
 
     def __str__(self):
-        """give back an output of the print() and str() representation of the Rectangle."""
+        """
+        give back an output of the print() and str()
+        representation of the Rectangle.
+        """
         return "[Rectangle] ({}) {}/{} - {}/{}".format(self.id,
                                                        self.x, self.y,
                                                        self.width, self.height)

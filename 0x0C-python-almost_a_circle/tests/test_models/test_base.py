@@ -1,72 +1,139 @@
+#!/usr/bin/python3
 import unittest
-
-from models.base import Base
-from models.rectangle import Rectangle
 from models.square import Square
+import sys
+from io import StringIO
+import pep8
+from models.base import Base
+import json
+from models.rectangle import Rectangle
+import os
+"""
+This module contains all unittest for Base class
+"""
+
 
 class TestBase(unittest.TestCase):
+    """
+    Class of functions to run tests
+    """
+    def setUp(self):
+        """
+        function to redirect stdout
+        """
+        sys.stdout = StringIO()
 
-    def test_type(self):
-        a = Base()
-        self.assertEqual(type(a), Base)
+    def tearDown(self):
+        """
+        cleans everything
+        """
+        sys.stdout = sys.__stdout__
 
-    def test_init(self):
-        a = Base()
-        tmp = Base(33)
-        b = Base()
-        self.assertEqual(a.id, b.id - 1)
-        self.assertEqual(b.id, a.id + 1)
-        self.assertEqual(tmp.id, 33)
+    def test_pep8_model(self):
+        """
+        Tests for pep8 model
+        """
+        p8 = pep8.StyleGuide(quiet=True)
+        p = p8.check_files(['models/base.py'])
+        self.assertEqual(p.total_errors, 0, "fix pep8")
 
-    def test_exception(self):
-        with self.assertRaises(TypeError):
-            Base(2, "foo")
+    def test_pep8_test(self):
+        """
+        Tests for pep8 test
+        """
+        p8 = pep8.StyleGuide(quiet=True)
+        p = p8.check_files(['tests/test_models/test_base.py'])
+        self.assertEqual(p.total_errors, 0, "fix pep8")
 
-        c = Base()
-        with self.assertRaises(AttributeError):
-            print(c.nb_objects)
-        with self.assertRaises(AttributeError):
-            print(c.__nb_objects)
-        with self.assertRaises(AttributeError):
-            print(Base.nb_objects)
-        with self.assertRaises(AttributeError):
-            print(Base.__nb_objects)
+    def test_docstrings(self):
+        self.assertIsNotNone(module_doc)
+        self.assertIsNotNone(Base.__doc__)
+        self.assertIs(hasattr(Base, "__init__"), True)
+        self.assertIsNotNone(Base.__init__.__doc__)
+        self.assertIs(hasattr(Base, "create"), True)
+        self.assertIsNotNone(Base.create.__doc__)
+        self.assertIs(hasattr(Base, "to_json_string"), True)
+        self.assertIsNotNone(Base.to_json_string.__doc__)
+        self.assertIs(hasattr(Base, "from_json_string"), True)
+        self.assertIsNotNone(Base.from_json_string.__doc__)
+        self.assertIs(hasattr(Base, "save_to_file"), True)
+        self.assertIsNotNone(Base.save_to_file.__doc__)
+        self.assertIs(hasattr(Base, "load_from_file"), True)
+        self.assertIsNotNone(Base.load_from_file.__doc__)
 
-    def test_to_json_string(self):
-        a = Square(5)
-        a_dict = a.to_dictionary()
-        b = Square(10)
-        b_dict = b.to_dictionary()
-        c = Square(15)
-        c_dict = c.to_dictionary()
-        json_s = Base.to_json_string([a_dict, b_dict, c_dict])
-        my_list = ['"size": 5', '"size": 15', '"x": 0']
-        for i in my_list:
-            self.assertIn(i, json_s)
-        
-        d = Rectangle(3, 2, id=400)
-        d_dict = d.to_dictionary()
-        json_s = Base.to_json_string([a_dict, b_dict, d_dict, c_dict])
-        self.assertIn('"width"', json_s)
+    def test_id(self):
+        """
+        Test check for id 
+        """
+        Base._Base__nb_objects = 0
+        b1 = Base()
+        b2 = Base()
+        b3 = Base()
+        b4 = Base(12)
+        b5 = Base()
+        self.assertEqual(b1.id, 1)
+        self.assertEqual(b2.id, 2)
+        self.assertEqual(b3.id, 3)
+        self.assertEqual(b4.id, 12)
+        self.assertEqual(b5.id, 4)
 
-        json_s = Base.to_json_string([])
-        self.assertEqual(json_s, "[]")
+    def test_from_json_string(self):
+        """
+        Test check from json string
+        """
+        self.assertEqual(Base.to_json_string(None), "[]")
+        self.assertEqual(Base.to_json_string([]), "[]")
+        with self.subTest():
+            r1 = Rectangle(10, 7, 2, 8, 1)
+            r1_dict = r1.to_dictionary()
+            json_dict = Base.to_json_string([r1_dict])
+            self.assertEqual(r1_dict, {'x': 2, 'width': 10,
+                                       'id': 1, 'height': 7,
+                                       'y': 8})
+            self.assertIs(type(r1_dict), dict)
+            self.assertIs(type(json_dict), str)
+            self.assertEqual(json.loads(json_dict), json.loads('[{"x": 2, '
+                                                               '"width": 10, '
+                                                               '"id": 1, '
+                                                               '"height": 7, '
+                                                               '"y": 8}]'))
 
-    def test_create(self):
-        a_dict = {'size': 5, 'id': 33, 'x': 2, 'y': 4}
-        a = Square.create(**a_dict)
-        self.assertEqual(a.size, a_dict['size'])
-        self.assertEqual(a.id, a_dict['id'])
-        self.assertEqual(a.x, a_dict['x'])
-        self.assertEqual(a.y, a_dict['y'])
+    def test_rectangle(self):
+        """
+        Test check for rectangle
+        """
+        R1 = Rectangle(4, 5, 6)
+        R1_dict = R1.to_dictionary()
+        R2 = Rectangle.create(**R1_dict)
+        self.assertNotEqual(R1, R2)
 
-        a_dict = {'width': 50, 'height': 60, 'id': 39993, 'x': 2, 'y': 4}
-        a = Rectangle.create(**a_dict)
-        self.assertEqual(a.width, a_dict['width'])
-        self.assertEqual(a.height, a_dict['height'])
-        self.assertEqual(a.id, a_dict['id'])
-        self.assertEqual(a.x, a_dict['x'])
-        self.assertEqual(a.y, a_dict['y'])
+    def test_square(self):
+        """
+        Test check for square creation
+        """
+        S1 = Square(44, 55, 66, 77)
+        S1_dict = S1.to_dictionary()
+        S2 = Rectangle.create(**S1_dict)
+        self.assertNotEqual(S1, S2)
 
-if __name__ == '__main__':
-    unitest.main()
+    def test_file_rectangle(self):
+        """
+        Test check if file loads from rectangle
+        """
+        R1 = Rectangle(33, 34, 35, 26)
+        R2 = Rectangle(202, 2)
+        lR = [R1, R2]
+        Rectangle.save_to_file(lR)
+        lR2 = Rectangle.load_from_file()
+        self.assertNotEqual(lR, lR2)
+
+    def test_file_square(self):
+        """
+        Test check if file loads from square
+        """
+        S1 = Square(22)
+        S2 = Square(44, 44, 55, 66)
+        lS = [S1, S2]
+        Square.save_to_file(lS)
+        lS2 = Square.load_from_file()
+        self.assertNotEqual(lS, lS2)
