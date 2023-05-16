@@ -1,6 +1,7 @@
-import unittest
-
-from models.rectangle import Rectangle
+import unittest, json, sys
+from models.base import Base
+from models.rectange import Rectangle
+from models.square import Square
 
 class TestRectangle(unittest.TestCase):
 
