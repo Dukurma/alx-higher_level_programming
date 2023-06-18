@@ -1,6 +1,6 @@
 #!/usr/bin/python3
 """
-Create abd moify the state relationship
+Ccity plus state relationship/modification
 """
 import sqlalchemy
 from sqlalchemy import Column, Integer, String
@@ -12,7 +12,7 @@ Base = declarative_base()
 
 class State(Base):
     """
-    A new table into de data base for state representation
+    A new representation of a state table
     """
     __tablename__ = 'states'
     id = Column(Integer, primary_key=True)
