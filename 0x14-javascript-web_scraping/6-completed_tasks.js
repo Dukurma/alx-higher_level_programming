@@ -1,27 +1,25 @@
 #!/usr/bin/node
-/* A script that shows and collate completed tasks*/
 
-const process = require('process');
+/* Write a script that computes the number of tasks completed by user id. */
+
 const request = require('request');
+const url = process.argv[2];
 
-let url = process.argv[2];
-let data;
-let collected = {};
-
-request(url, function (error, response, body) {
-  if (error != null) {
+request.get(url, { json: true }, (error, response, body) => {
+  if (error) {
     console.log(error);
-  } else {
-    data = JSON.parse(body);
-    data.forEach(function (result) {
-      if (result['completed'] === true) {
-        let userid = result['userId'];
-        if (!(userid in collected)) {
-          collected[userid] = 0;
-        }
-        collected[userid] += 1;
-      }
-    });
-    console.log(collected);
+    return;
   }
+
+  const tasksCompleted = {};
+  body.forEach((todo) => {
+    if (todo.completed) {
+      if (!tasksCompleted[todo.userId]) {
+        tasksCompleted[todo.userId] = 1;
+      } else {
+        tasksCompleted[todo.userId] += 1;
+      }
+    }
+  });
+  console.log(tasksCompleted);
 });
